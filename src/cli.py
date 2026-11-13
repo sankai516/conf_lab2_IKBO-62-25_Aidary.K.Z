@@ -1,9 +1,11 @@
-"""CLI configuration and validation module for Stage 1."""
+"""CLI configuration and direct dependency display for Stage 2."""
 
 import argparse
 import os
 import sys
 from typing import Dict
+
+from src.apk_parser import get_direct_dependencies
 
 MIN_STR_LEN = 1
 SVG_EXT = ".svg"
@@ -64,17 +66,19 @@ def validate_args(args: argparse.Namespace) -> Dict[str, str]:
 
 
 def main() -> None:
-    """Run CLI tool and display user configuration."""
+    """Run CLI tool and display direct dependencies for Stage 2."""
     parser = build_parser()
     args = parser.parse_args()
     try:
         config = validate_args(args)
+        if not args.test_mode:
+            deps = get_direct_dependencies(config["repo"], config["package"])
+            print(f"Direct dependencies for '{config['package']}':")
+            for dep in deps:
+                print(f" - {dep}")
     except ValueError as err:
         print(err, file=sys.stderr)
         sys.exit(MIN_STR_LEN)
-
-    for key, value in config.items():
-        print(f"{key}: {value}")
 
 
 if __name__ == "__main__":
