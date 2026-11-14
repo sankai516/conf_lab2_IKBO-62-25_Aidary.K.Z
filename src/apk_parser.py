@@ -43,16 +43,18 @@ def parse_apkindex_content(content: str) -> Dict[str, List[str]]:
             elif line.startswith(PROVIDES_PREFIX):
                 provided = line[PREFIX_LEN:].strip().split()
         if pkg_name:
-            pkg_deps[pkg_name] = [
-                clean_dep_token(tok) for tok in raw_deps if clean_dep_token(tok)
-            ]
+            cleaned_deps: List[str] = []
+            for tok in raw_deps:
+                cleaned_tok = clean_dep_token(tok)
+                if cleaned_tok:
+                    cleaned_deps.append(cleaned_tok)
+            pkg_deps[pkg_name] = cleaned_deps
             for prov in provided:
                 prov_name = clean_dep_token(prov)
                 if prov_name:
                     provides_map[prov_name] = pkg_name
 
     return resolve_virtual_deps(pkg_deps, provides_map)
-
 
 def resolve_virtual_deps(
     pkg_deps: Dict[str, List[str]],

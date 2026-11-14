@@ -13,7 +13,8 @@ class TestApkParser(unittest.TestCase):
             "P:musl\nV:1.2.5\np:so:libc.musl-x86_64.so.1=1\n\n"
             "P:zlib\nV:1.3.1\nD:so:libc.musl-x86_64.so.1\n"
             "p:so:libz.so.1=1.3.1\n\n"
-            "P:curl\nV:8.9.0\nD:so:libc.musl-x86_64.so.1 so:libz.so.1 ca-certs\n"
+            "P:curl\nV:8.9.0\n"
+            "D:so:libc.musl-x86_64.so.1 so:libz.so.1 ca-certs\n"
         )
         parsed = parse_apkindex_content(sample_index)
         self.assertEqual(parsed["musl"], [])
