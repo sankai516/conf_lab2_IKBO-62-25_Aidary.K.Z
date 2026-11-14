@@ -6,6 +6,12 @@ INDENT = "    "
 HEADER = "graph TD\n"
 ARROW = " --> "
 SVG_MIME = "image/svg+xml"
+BASE_HEIGHT = 400
+HEIGHT_PER_NODE = 35
+HEIGHT_PADDING = 150
+VIEWBOX_WIDTH = 900
+STEP_Y = 20
+START_Y = 70
 
 
 def generate_mermaid(graph: Dict[str, List[str]]) -> str:
@@ -26,24 +32,30 @@ def render_svg_diagram(
 ) -> None:
     """Write standalone valid SVG visualization containing Mermaid graph."""
     node_count = len(graph)
-    svg_height = max(400, node_count * 35 + 150)
+    extra_height = node_count * HEIGHT_PER_NODE + HEIGHT_PADDING
+    svg_height = max(BASE_HEIGHT, extra_height)
     lines: List[str] = [
         '<svg xmlns="http://www.w3.org/2000/svg" ',
-        f'width="900" height="{svg_height}" viewBox="0 0 900 {svg_height}">\n',
-        '<style>\n',
-        '  .bg { fill: #1e1e2e; }\n',
-        '  .title { fill: #cdd6f4; font-family: monospace; font-size: 16px; }\n',
-        '  .code { fill: #a6adc8; font-family: monospace; font-size: 12px; }\n',
-        '</style>\n',
-        f'<rect width="100%" height="100%" class="bg"/>\n',
-        '<text x="20" y="35" class="title">Alpine Dependency Graph (Mermaid)</text>\n',
+        f'width="{VIEWBOX_WIDTH}" height="{svg_height}" ',
+        f'viewBox="0 0 {VIEWBOX_WIDTH} {svg_height}">\n',
+        "<style>\n",
+        "  .bg { fill: #1e1e2e; }\n",
+        "  .title { fill: #cdd6f4; font-family: monospace; }\n",
+        "  .code { fill: #a6adc8; font-family: monospace; }\n",
+        "</style>\n",
+        '<rect width="100%" height="100%" class="bg"/>\n',
+        '<text x="20" y="35" class="title">Alpine Graph (Mermaid)</text>\n',
     ]
 
-    y_coord = 70
+    y_coord = START_Y
     for code_line in mermaid_code.strip().splitlines():
         escaped = code_line.replace("&", "&amp;").replace("<", "&lt;")
-        lines.append(f'<text x="25" y="{y_coord}" class="code">{escaped}</text>\n')
-        y_coord += 20
+        line_tag = (
+            f'<text x="25" y="{y_coord}" font-size="12px" '
+            f'class="code">{escaped}</text>\n'
+        )
+        lines.append(line_tag)
+        y_coord += STEP_Y
 
     lines.append("</svg>\n")
     with open(output_path, "w", encoding="utf-8") as svg_file:
