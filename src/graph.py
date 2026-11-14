@@ -1,9 +1,8 @@
-"""Dependency graph traversal and test repository parsing for Stage 3."""
+"""Dependency graph traversal and load order computation for Stage 4."""
 
 from typing import Callable, Dict, List, Set, Tuple
 
 DELIMITER = ":"
-MIN_SPLIT_PARTS = 2
 FIRST_PART_IDX = 0
 SECOND_PART_IDX = 1
 
@@ -63,3 +62,36 @@ def build_dependency_graph(
             stack.pop()
 
     return graph, cycles
+
+
+def compute_load_order(
+    graph: Dict[str, List[str]],
+    root_pkg: str,
+) -> List[str]:
+    """Compute package load order using post-order DFS traversal."""
+    order: List[str] = []
+    visited: Set[str] = set()
+    path_set: Set[str] = set()
+    stack: List[str] = [root_pkg]
+
+    while stack:
+        node = stack[-1]
+        if node not in path_set and node not in visited:
+            path_set.add(node)
+
+        unvisited_dep = None
+        for dep in graph.get(node, []):
+            if dep not in visited and dep not in path_set:
+                unvisited_dep = dep
+                break
+
+        if unvisited_dep is not None:
+            stack.append(unvisited_dep)
+        else:
+            path_set.discard(node)
+            if node not in visited:
+                visited.add(node)
+                order.append(node)
+            stack.pop()
+
+    return order

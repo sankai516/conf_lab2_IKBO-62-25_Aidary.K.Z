@@ -1,12 +1,16 @@
-"""CLI interface supporting Stage 3 graph building and cycle detection."""
+"""CLI interface supporting Stage 4 dependency load order output."""
 
 import argparse
 import os
 import sys
-from typing import Dict, List
+from typing import Dict
 
 from src.apk_parser import fetch_apkindex, parse_apkindex_content
-from src.graph import build_dependency_graph, parse_test_repo
+from src.graph import (
+    build_dependency_graph,
+    compute_load_order,
+    parse_test_repo,
+)
 
 MIN_STR_LEN = 1
 EXIT_FAILURE = 1
@@ -75,29 +79,34 @@ def resolve_fetcher(config: Dict[str, str]):
     return lambda p: repo_data.get(p, [])
 
 
+def print_order_summary(load_order: list, cycles: list) -> None:
+    """Display computed load order and real package manager notes."""
+    print("Computed load/install order:")
+    for idx, pkg in enumerate(load_order, start=1):
+        print(f"  {idx}. {pkg}")
+
+    print("\nComparison with Alpine apk manager:")
+    print(" - apk uses a SAT/heuristic solver with package priority levels.")
+    print(" - apk breaks mutual cycle dependencies via pre-install triggers.")
+    if cycles:
+        print(" - Cyclic dependencies were detected and bypassed in ordering.")
+
+
 def main() -> None:
-    """Run CLI tool, build dependency graph and display edges and cycles."""
+    """Run Stage 4 workflow: graph build and load order computation."""
     parser = build_parser()
     args = parser.parse_args()
     try:
         config = validate_args(args)
         fetcher = resolve_fetcher(config)
         graph, cycles = build_dependency_graph(config["package"], fetcher)
+        load_order = compute_load_order(graph, config["package"])
     except ValueError as err:
         print(err, file=sys.stderr)
         sys.exit(EXIT_FAILURE)
 
-    print(f"Graph for '{config['package']}':")
-    for src, deps in graph.items():
-        deps_str = ", ".join(deps) if deps else "(none)"
-        print(f"  {src} -> {deps_str}")
-
-    if cycles:
-        print("Cycles detected:")
-        for src, dst in cycles:
-            print(f"  Cycle edge: {src} -> {dst}")
-    else:
-        print("No cycles detected.")
+    print(f"Package: {config['package']}\n")
+    print_order_summary(load_order, cycles)
 
 
 if __name__ == "__main__":
