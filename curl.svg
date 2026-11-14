@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="780" viewBox="0 0 900 780">
+<style>
+  .bg { fill: #1e1e2e; }
+  .title { fill: #cdd6f4; font-family: monospace; font-size: 16px; }
+  .code { fill: #a6adc8; font-family: monospace; font-size: 12px; }
+</style>
+<rect width="100%" height="100%" class="bg"/>
+<text x="20" y="35" class="title">Alpine Dependency Graph (Mermaid)</text>
+<text x="25" y="70" class="code">graph TD</text>
+<text x="25" y="90" class="code">    brotli-libs --> musl</text>
+<text x="25" y="110" class="code">    c-ares --> musl</text>
+<text x="25" y="130" class="code">    ca-certificates --> yash-binsh</text>
+<text x="25" y="150" class="code">    ca-certificates --> musl</text>
+<text x="25" y="170" class="code">    ca-certificates --> libcrypto3</text>
+<text x="25" y="190" class="code">    curl --> libcurl</text>
+<text x="25" y="210" class="code">    curl --> musl</text>
+<text x="25" y="230" class="code">    curl --> zlib</text>
+<text x="25" y="250" class="code">    libcrypto3 --> musl</text>
+<text x="25" y="270" class="code">    libcurl --> ca-certificates</text>
+<text x="25" y="290" class="code">    libcurl --> brotli-libs</text>
+<text x="25" y="310" class="code">    libcurl --> musl</text>
+<text x="25" y="330" class="code">    libcurl --> c-ares</text>
+<text x="25" y="350" class="code">    libcurl --> libcrypto3</text>
+<text x="25" y="370" class="code">    libcurl --> libidn2</text>
+<text x="25" y="390" class="code">    libcurl --> nghttp2-libs</text>
+<text x="25" y="410" class="code">    libcurl --> libpsl</text>
+<text x="25" y="430" class="code">    libcurl --> libssl3</text>
+<text x="25" y="450" class="code">    libcurl --> zlib</text>
+<text x="25" y="470" class="code">    libcurl --> zstd-libs</text>
+<text x="25" y="490" class="code">    libidn2 --> musl</text>
+<text x="25" y="510" class="code">    libidn2 --> libunistring</text>
+<text x="25" y="530" class="code">    libncursesw --> ncurses-terminfo-base</text>
+<text x="25" y="550" class="code">    libncursesw --> musl</text>
+<text x="25" y="570" class="code">    libpsl --> musl</text>
+<text x="25" y="590" class="code">    libpsl --> libidn2</text>
+<text x="25" y="610" class="code">    libpsl --> libunistring</text>
+<text x="25" y="630" class="code">    libssl3 --> libcrypto3</text>
+<text x="25" y="650" class="code">    libssl3 --> musl</text>
+<text x="25" y="670" class="code">    libunistring --> musl</text>
+<text x="25" y="690" class="code">    musl</text>
+<text x="25" y="710" class="code">    ncurses-terminfo-base</text>
+<text x="25" y="730" class="code">    nghttp2-libs --> musl</text>
+<text x="25" y="750" class="code">    yash --> yash-binsh</text>
+<text x="25" y="770" class="code">    yash --> musl</text>
+<text x="25" y="790" class="code">    yash --> libncursesw</text>
+<text x="25" y="810" class="code">    yash-binsh --> yash</text>
+<text x="25" y="830" class="code">    zlib --> musl</text>
+<text x="25" y="850" class="code">    zstd-libs --> musl</text>
+</svg>

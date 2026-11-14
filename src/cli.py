@@ -1,4 +1,4 @@
-"""CLI interface supporting Stage 4 dependency load order output."""
+"""CLI interface supporting Stage 5 Mermaid and SVG visual output."""
 
 import argparse
 import os
@@ -11,6 +11,7 @@ from src.graph import (
     compute_load_order,
     parse_test_repo,
 )
+from src.visualizer import generate_mermaid, render_svg_diagram
 
 MIN_STR_LEN = 1
 EXIT_FAILURE = 1
@@ -93,7 +94,7 @@ def print_order_summary(load_order: list, cycles: list) -> None:
 
 
 def main() -> None:
-    """Run Stage 4 workflow: graph build and load order computation."""
+    """Run Stage 5 pipeline: graph build, Mermaid code and SVG export."""
     parser = build_parser()
     args = parser.parse_args()
     try:
@@ -101,12 +102,16 @@ def main() -> None:
         fetcher = resolve_fetcher(config)
         graph, cycles = build_dependency_graph(config["package"], fetcher)
         load_order = compute_load_order(graph, config["package"])
+        mermaid_code = generate_mermaid(graph)
+        render_svg_diagram(graph, mermaid_code, config["output"])
     except ValueError as err:
         print(err, file=sys.stderr)
         sys.exit(EXIT_FAILURE)
 
     print(f"Package: {config['package']}\n")
     print_order_summary(load_order, cycles)
+    print(f"\nMermaid Graph Code:\n{mermaid_code}")
+    print(f"SVG saved successfully to: {config['output']}")
 
 
 if __name__ == "__main__":

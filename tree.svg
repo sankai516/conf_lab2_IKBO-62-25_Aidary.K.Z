@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="400" viewBox="0 0 900 400">
+<style>
+  .bg { fill: #1e1e2e; }
+  .title { fill: #cdd6f4; font-family: monospace; font-size: 16px; }
+  .code { fill: #a6adc8; font-family: monospace; font-size: 12px; }
+</style>
+<rect width="100%" height="100%" class="bg"/>
+<text x="20" y="35" class="title">Alpine Dependency Graph (Mermaid)</text>
+<text x="25" y="70" class="code">graph TD</text>
+<text x="25" y="90" class="code">    musl</text>
+<text x="25" y="110" class="code">    tree --> musl</text>
+</svg>
